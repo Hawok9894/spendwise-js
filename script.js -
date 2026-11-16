@@ -1,0 +1,79 @@
+// SpendWise - JavaScript Foundation
+console.log("SpendWise Loaded Successfully 💰");
+
+// 2. STORE APPLICATION DATA - Variables
+let monthlyIncome = 0;
+let rentExpense = 0;
+let foodExpense = 0;
+let transportExpense = 0;
+let entertainmentExpense = 0;
+let totalExpenses = 0;
+let remainingBalance = 0;
+let savingsPercentage = 0;
+
+// Constants
+const APP_NAME = "SpendWise";
+const CURRENCY = "KES";
+
+// 5. REUSABLE FUNCTIONS
+function calculateTotalExpenses(rent, food, transport, entertainment) {
+    return rent + food + transport + entertainment;
+}
+function calculateRemainingBalance(income, expenses) {
+    return income - expenses;
+}
+function calculateSavingsPercentage(balance, income) {
+    if (income === 0) return 0;
+    return (balance / income) * 100;
+}
+function getBudgetStatus(balance) {
+    if (balance > 0) return "You are within budget! ✅";
+    if (balance === 0) return "You broke even ⚖️";
+    return "You are over budget! ❌";
+}
+function displayResultsConsole() {
+    console.log("========== " + APP_NAME + " REPORT ==========");
+    console.log(`Monthly Income: ${CURRENCY} ${monthlyIncome}`);
+    console.log(`Rent: ${CURRENCY} ${rentExpense}`);
+    console.log(`Food: ${CURRENCY} ${foodExpense}`);
+    console.log(`Transport: ${CURRENCY} ${transportExpense}`);
+    console.log(`Entertainment: ${CURRENCY} ${entertainmentExpense}`);
+    console.log("------------------------------------");
+    console.log(`Total Expenses: ${CURRENCY} ${totalExpenses}`);
+    console.log(`Remaining Balance: ${CURRENCY} ${remainingBalance}`);
+    console.log(`Savings: ${savingsPercentage.toFixed(2)}%`);
+    console.log(`Status: ${getBudgetStatus(remainingBalance)}`);
+}
+function displayResultsUI() {
+    const resultCard = document.getElementById("resultCard");
+    const resultsDiv = document.getElementById("results");
+    resultCard.style.display = "block";
+    const statusClass = remainingBalance >= 0 ? "positive" : "negative";
+    resultsDiv.innerHTML = `
+        <div class="result-item"><span>Monthly Income</span><span>${CURRENCY} ${monthlyIncome}</span></div>
+        <div class="result-item"><span>Rent</span><span>${CURRENCY} ${rentExpense}</span></div>
+        <div class="result-item"><span>Food</span><span>${CURRENCY} ${foodExpense}</span></div>
+        <div class="result-item"><span>Transport</span><span>${CURRENCY} ${transportExpense}</span></div>
+        <div class="result-item"><span>Entertainment</span><span>${CURRENCY} ${entertainmentExpense}</span></div>
+        <div class="result-item total"><span>Total Expenses</span><span>${CURRENCY} ${totalExpenses}</span></div>
+        <div class="result-item total ${statusClass}"><span>Remaining</span><span>${CURRENCY} ${remainingBalance} (${savingsPercentage.toFixed(1)}%)</span></div>
+        <div class="result-item"><span>Status</span><span>${getBudgetStatus(remainingBalance)}</span></div>
+    `;
+}
+function startBudgeting() {
+    monthlyIncome = Number(prompt("Enter monthly income (KES):", "50000"));
+    rentExpense = Number(prompt("Enter rent expense:", "15000"));
+    foodExpense = Number(prompt("Enter food expense:", "10000"));
+    transportExpense = Number(prompt("Enter transport expense:", "5000"));
+    entertainmentExpense = Number(prompt("Enter entertainment expense:", "5000"));
+    if (isNaN(monthlyIncome)) { alert("Enter valid numbers!"); return; }
+    totalExpenses = calculateTotalExpenses(rentExpense, foodExpense, transportExpense, entertainmentExpense);
+    remainingBalance = calculateRemainingBalance(monthlyIncome, totalExpenses);
+    savingsPercentage = calculateSavingsPercentage(remainingBalance, monthlyIncome);
+    displayResultsConsole();
+    displayResultsUI();
+    alert(`Calculated! Remaining: ${CURRENCY} ${remainingBalance} - Check Console F12`);
+}
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("startBtn").addEventListener("click", startBudgeting);
+});
